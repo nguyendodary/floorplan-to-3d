@@ -1,108 +1,125 @@
-# Roomifi v1.0 - 2D to 3D Floor Plan Visualization
+# Roomifi
 
-Roomifi is a modern web application that transforms 2D floor plans into photorealistic 3D architectural renders using the Puter.js AI ecosystem.
+AI SaaS platform that transforms 2D floor plans into 3D visualizations.
 
-## 🚀 Features
+## Tech Stack
 
-- **2D to 3D Transformation**: Upload a 2D floor plan image and get an AI-generated 3D interior render instantly.
-- **Community Feed**: Share your transformations and explore what others are creating.
-- **Auth & Cloud-Ready**: Powered by Puter.js for authentication, AI, and key-value storage.
-- **Modern UI/UX**: Built with React 19, Vite, Tailwind CSS, and Framer Motion for a premium, responsive experience.
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19 + TypeScript |
+| Build Tool | Vite 8 |
+| Styling | Tailwind CSS 4 |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| Backend | Puter.js (Auth, KV Storage, File Hosting) |
 
----
+## Project Structure
 
-## 🛠 Prerequisites
+```
+roomifi/
+├── index.html                  # Entry HTML + Puter.js SDK + theme script
+├── package.json
+├── vite.config.ts              # Vite + React + Tailwind plugins
+├── tsconfig.json               # TypeScript project references
+├── tsconfig.app.json           # App TypeScript config
+├── Dockerfile                  # Multi-stage build (Node + Nginx)
+├── docker-compose.yml
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
+└── src/
+    ├── main.tsx                # Entry: ThemeProvider > PuterProvider > App
+    ├── App.tsx                 # Root component
+    ├── index.css               # Tailwind import + dark variant config
+    ├── assets/
+    │   └── hero.png
+    ├── components/
+    │   ├── index.ts            # Barrel exports
+    │   ├── Navbar.tsx          # Auth state, theme toggle, logo
+    │   ├── Hero.tsx            # Landing hero section
+    │   ├── UploadZone.tsx      # File upload, AI transform, result display
+    │   ├── CommunityFeed.tsx   # Recent transformations from KV
+    │   └── Footer.tsx
+    ├── context/
+    │   ├── index.ts            # Barrel exports
+    │   ├── PuterContext.ts     # usePuter hook definition
+    │   ├── PuterProvider.tsx   # Auth, AI, FS, KV operations
+    │   └── ThemeContext.tsx    # Dark/light mode toggle
+    └── types/
+        └── index.ts            # Puter SDK types, app interfaces
+```
 
-Before starting, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (version 20 or higher)
-- [npm](https://www.npmjs.com/)
-- [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/) (optional, for containerized run)
+## Getting Started
 
----
+### Prerequisites
 
-## 💻 Local Installation & Development
+- Node.js 20+
+- npm
 
-To run the application directly on your machine:
+### Local Development
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository_url>
-   cd roomifi/roomifi
-   ```
+```bash
+npm install
+npm run dev
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+Opens at `http://localhost:5173`.
 
-3. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-   The application will be accessible at `http://localhost:5173`.
+### Production Build
 
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
-   The build artifacts will be located in the `dist/` directory.
+```bash
+npm run build
+npm run preview
+```
 
-5. **Preview production build**:
-   ```bash
-   npm run preview
-   ```
+### Docker
 
----
+```bash
+docker-compose up -d --build
+```
 
-## 🐳 Running with Docker
+Opens at `http://localhost:8080`.
 
-Roomifi is fully containerized for easy deployment.
+## Features
 
-### Using Docker Compose (Recommended)
+- **Puter.js Auth** - Sign in/out via Puter SDK
+- **Image Upload** - Drag-and-drop or click to upload floor plan images (PNG, JPG, WEBP up to 10MB)
+- **AI Transformation** - Uses `puter.ai.txt2img` to generate 3D renders from floor plans
+- **Community Feed** - Browse recent transformations stored in Puter KV
+- **Delete Own Posts** - Users can remove their own transformations
+- **Dark/Light Mode** - Persisted to localStorage, defaults to system preference
+- **Responsive** - Mobile-first layout using Tailwind breakpoints
 
-To build and run the application in a single command:
+## Architecture
 
-1. **Start the container**:
-   ```bash
-   docker-compose up -d --build
-   ```
+### Data Flow
 
-2. **Access the application**:
-   Open your browser and navigate to `http://localhost:8080`.
+```
+User uploads image
+  → FileReader reads as data URL
+  → puter.ai.txt2img generates 3D render
+  → Result displayed side-by-side (2D vs 3D)
+  → Saved to Puter KV for community feed
+```
 
-3. **Stop the container**:
-   ```bash
-   docker-compose down
-   ```
+### Puter.js Usage
 
-### Manual Docker Build
+| Service | Usage |
+|---------|-------|
+| `puter.auth` | User sign in/out, get current user |
+| `puter.ai.txt2img` | Image-to-image generation (2D → 3D) |
+| `puter.kv` | Store/retrieve transformation metadata |
+| `puter.fs` | Upload files to Puter hosting |
 
-If you Prefer to build and run the image manually:
+### Theming
 
-1. **Build the image**:
-   ```bash
-   docker build -t roomifi-app .
-   ```
+Dark mode is the default. The theme toggle in the navbar switches between `dark` and `light` classes on `<html>`. Tailwind's `@custom-variant dark (&:where(.dark, .dark *))` enables class-based dark mode selectors.
 
-2. **Run the container**:
-   ```bash
-   docker run -d -p 8080:80 --name roomifi roomifi-app
-   ```
+## Scripts
 
----
-
-## 🏗 Project Architecture
-
-- **Frontend**: React 19 (Hooks, Context API).
-- **Styling**: Tailwind CSS + Framer Motion (Animations).
-- **Backend/Services**: 
-  - **Puter.js SDK**: Handles Authentication, FS, KV storage, and AI processing.
-  - **AI Logic**: 
-    - `puter.ai.txt2img`: Generates the 3D render using image-to-image synthesis.
-    - `puter.kv`: Stores transformation history.
-
----
-
-## 📝 License
-
-This project is for demonstration purposes. Inspired by modern architectural visualization tools.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | TypeScript check + production build |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint |
