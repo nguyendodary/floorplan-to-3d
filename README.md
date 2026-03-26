@@ -1,4 +1,4 @@
-# Roomifi - 2D to 3D Floor Plan Visualization
+# Roomifi v1.0 - 2D to 3D Floor Plan Visualization
 
 Roomifi is a modern web application that transforms 2D floor plans into photorealistic 3D architectural renders using the Puter.js AI ecosystem.
 
