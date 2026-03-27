@@ -1,4 +1,4 @@
-import { Navbar, Hero, UploadZone, CommunityFeed, Footer } from './components';
+import { Navbar, Hero, UploadZone, Footer } from './components';
 
 function App() {
   return (
@@ -7,7 +7,6 @@ function App() {
       <main>
         <Hero />
         <UploadZone />
-        <CommunityFeed />
       </main>
       <Footer />
     </div>
