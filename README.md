@@ -11,7 +11,7 @@ AI SaaS platform that transforms 2D floor plans into 3D visualizations.
 | Styling | Tailwind CSS 4 |
 | Animations | Framer Motion |
 | Icons | Lucide React |
-| Backend | Puter.js (Auth, KV Storage, File Hosting) |
+| Backend | Puter.js (Auth) |
 
 ## Project Structure
 
@@ -37,13 +37,12 @@ roomifi/
     │   ├── index.ts            # Barrel exports
     │   ├── Navbar.tsx          # Auth state, theme toggle, logo
     │   ├── Hero.tsx            # Landing hero section
-    │   ├── UploadZone.tsx      # File upload, AI transform, result display
-    │   ├── CommunityFeed.tsx   # Recent transformations from KV
+    │   ├── UploadZone.tsx      # File upload and result display
     │   └── Footer.tsx
     ├── context/
     │   ├── index.ts            # Barrel exports
     │   ├── PuterContext.ts     # usePuter hook definition
-    │   ├── PuterProvider.tsx   # Auth, AI, FS, KV operations
+    │   ├── PuterProvider.tsx   # Auth operations
     │   └── ThemeContext.tsx    # Dark/light mode toggle
     └── types/
         └── index.ts            # Puter SDK types, app interfaces
@@ -84,32 +83,16 @@ Opens at `http://localhost:8080`.
 
 - **Puter.js Auth** - Sign in/out via Puter SDK
 - **Image Upload** - Drag-and-drop or click to upload floor plan images (PNG, JPG, WEBP up to 10MB)
-- **AI Transformation** - Uses `puter.ai.txt2img` to generate 3D renders from floor plans
-- **Community Feed** - Browse recent transformations stored in Puter KV
-- **Delete Own Posts** - Users can remove their own transformations
 - **Dark/Light Mode** - Persisted to localStorage, defaults to system preference
 - **Responsive** - Mobile-first layout using Tailwind breakpoints
 
 ## Architecture
-
-### Data Flow
-
-```
-User uploads image
-  → FileReader reads as data URL
-  → puter.ai.txt2img generates 3D render
-  → Result displayed side-by-side (2D vs 3D)
-  → Saved to Puter KV for community feed
-```
 
 ### Puter.js Usage
 
 | Service | Usage |
 |---------|-------|
 | `puter.auth` | User sign in/out, get current user |
-| `puter.ai.txt2img` | Image-to-image generation (2D → 3D) |
-| `puter.kv` | Store/retrieve transformation metadata |
-| `puter.fs` | Upload files to Puter hosting |
 
 ### Theming
 
